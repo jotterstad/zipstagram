@@ -1,0 +1,128 @@
+{% extends "./layout.njk" %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+            <div class="author-avatar-container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img class="author-avatar-img" src="https://media.licdn.com/dms/image/C4E03AQE-vcD5c06jcg/profile-displayphoto-shrink_200_200/0?e=1528520400&v=beta&t=nDVDYmEfrMgyuGN_5yKaQ3zuXpDHUpUMuS6CJBsm4ec" />   
+                    </div>
+                    <div class="col-md-8 col-xs-12">
+                        <div class="author-bio">
+                            <p>@ JeremyOtterstad</p>
+                            <p class="autor-about">Hello, my name is Jeremy. I'm a Husband, Father, and Disciple of Christ. I enjoy enjoy being a coffee consumer. I'll be walking you through Zipstagram's API.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1>A little bit about Zipstagram</h1>
+            <p>Zipstagram is a super cool place on the internet where you can search your zip code to see all of the nerdy geocode data about your city, county, lat, long, etc.</p>
+
+            <h2>About the Zipstagram API</h1>
+            <p>Using Zipstagram API, you have access to over 41,000+ zip codes within the United States.</p>
+            
+            <h3>Endpoints</h3>
+            
+            <h4>1. Find a single place by zip code (GET)</h4>
+            <p>https://zipstagram-api.herokuapp.com/api/zip/{zipcode}</p>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/zip/55483" target="_blank">Minneapolis, MN</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/zip/76071" target="_blank">Newark, TX</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/zip/97217" target="_blank">Portland, OR</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/zip/32789" target="_blank">Winter Park, FL</a>
+            
+            <h5>JSON Example</h5>
+            <div class="describe-data-results-container">    
+                <pre>
+{
+	"dataModel": {
+		"pageDetails": {
+			"totalRows": 1
+		},
+		"queryResults": [{
+			"id": 18459,
+			"countryCode": "US",
+			"zipCode": 55404,
+			"city": "Minneapolis",
+			"state": "Minnesota",
+			"stateAb": "MN",
+			"county": "Hennepin",
+			"stateCountyCode": "53",
+			"lat": 44.9609,
+			"long": -93.2642,
+			"created_at": null,
+			"updated_at": null
+		}]
+	}
+}
+</pre>
+                
+            </div>
+            <p><strong>dataModel:</strong><br />The entire parent object response from the API.</p>
+            <p><strong>pageDetails:</strong><br />This shows some metadata about the response. It will be useful later when we cover pagination details.</p>
+            <p><strong>queryResults:</strong><br />This is the zipcode array response from the API.</p>
+
+            <p><br />Most of the properties are easy to understand. So here's some of the not so obvious to clarify.<p>
+            <p><strong>queryResults.id:</strong><br />Zipstagram's primary id.</p>
+            <p><strong>queryResults.stateCountyCode:</strong><br />Each State has its own stateCountyCode. The example happens to have a stateCountyCode of 9.</p>
+            <p><strong>queryResults.created_at or queryResults.updated_at</strong><br />Zipstagram's internal timestamps, you can ignore for now.</p>
+            
+            <hr />
+            <h4>2. Find all of the zip codes in a state, including a way to paginate through the results. (GET)</h4>
+
+            <p>https://zipstagram-api.herokuapp.com/api/state/{stateAbbr}</p>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn" target="_blank">Minnesota</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/fl" target="_blank">Florida</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/tx" target="_blank">Texas</a>
+            <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/or" target="_blank">Oregon</a>
+
+            <h5>JSON Example</h5>
+            <div class="describe-data-results-container">
+            <pre>
+{
+    "dataModel": {
+        "pageDetails": {
+            "totalResults": 991,
+            "totalResultsPage": 50,
+            "currentPage": 1,
+            "totalPages": 20
+        },
+        "queryResults": [{ zipCodeObjects }]
+    }
+}
+</pre>
+       </div>
+        
+        
+        <p><strong>pageDetails.totalResults:</strong><br />This is the total amount of zip codes that exist within that state. The example is showing that Minnesota has 991 total zip codes.</p>
+        <p><strong>pageDetails.totalResultsPage:</strong><br />This is the total amount of zip codes that the API returned for this response. The default items per page request is set to 50.</p>
+        <p><strong>pageDetails.currentPage:</strong><br />This is the current page in the set that the API returned.</p>
+        <p><strong>pageDetails.totalPages:</strong><br />This is the total number of pages.</p>
+
+        <br />
+        <h5>Pagination</h5>
+        <p>You simply add in the query string parameters into the request URL.<p>
+        <p>Minnesota example of pages 1-5 w/100 zipcodes per API request.</p>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?limit=100" target="_blank">Page 1</a>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?limit=100&amp;offset=101"target="_blank">Page 2</a>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?limit=100&amp;offset=201"target="_blank">Page 3</a>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?limit=100&amp;offset=301"target="_blank">Page 4</a>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?limit=100&amp;offset=401"target="_blank">Page 5</a>
+
+        <br />
+        <h5>Default Parameters</h5>
+        <p><strong>limit:</strong> (INT) 50</p>
+        <p><strong>orderby:</strong> (STRING) city</p>
+        <p><strong>sort:</strong> (STRING) asc</p>
+        <p><strong>offset:</strong> (INT) 0</p>
+
+        <p>Minnesota Example of zip codes ordered by County then by City</p>
+        <a class="btn btn-default" href="https://zipstagram-api.herokuapp.com/api/state/mn?orderby=county&amp;orderby=city"target="_blank">Ordered by County</a>
+        
+
+    </div>
+</div>
+{% endblock %}
